@@ -83,6 +83,13 @@ const TrackInteractions = () => {
           resourceId: "66e1e6defba116cdc7733f50",
           userId: "66e1a7465008b29b6c152401",
           timeInMinutes: timeInMinutes,
+        })
+      const respons2 = await axios.post(
+        "http://127.0.0.1:8080/api/v1/resource/updateResourceTime",
+        {
+          // resourceId: "66e1e6defba116cdc7733f50",
+          userId: "66e1a7465008b29b6c152401",
+          timeInMinutes: timeInMinutes,
         }
       );
       console.log("Time sent to backend:", response.data);

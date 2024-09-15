@@ -1,0 +1,25 @@
+.path-container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    background-color: #2A2A2A;
+}
+
+.path{  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2A2A2A;
+    height: 10vh;
+    border-radius: 5px;
+    background-color: #C9C9AF;
+    padding: 0 0.1rem;
+}
+
+.path p{
+    /* margin-bottom: 0rem; */
+    border-left: 3px solid rgb(102, 0, 255);
+    padding: 0 0.5rem;
+}
