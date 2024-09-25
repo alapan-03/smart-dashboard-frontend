@@ -1,14 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Quiz from './Components/Quiz';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import Home from './Components/Homepage/Home';
+import Signin from './Components/Signin'
+import Signup from './Components/Signup'
 
-// Quiz App Component
-function App() {
-  return(
+const App = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
+  return (
     <>
-      <Quiz/>
+      {/* <Navbar transparent={isHomePage} /> */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App;
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
+export default AppWrapper;
