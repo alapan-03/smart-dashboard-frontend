@@ -25,12 +25,14 @@ export default function Appan2(props) {
         setAddResourceSt(e)
     }
 
+    console.log(addTopicState)
+
     return(
         <div className="appan-cont">
         <Navbar addTopicProp={addTopic}/>
         <div className="appan">
         <Sidebar/>
-        <LearningRoadmap setTopic={setTopic}/>
+        <LearningRoadmap setTopic={setTopic} addTopicProp={addTopic} resource={resource}/>
         {addTopicState && 
         <div >
         <CreateTopic addTopicProp={addTopic}/>
@@ -42,7 +44,7 @@ export default function Appan2(props) {
         <Resource topic={topicId} addResource={setAddResource}/>
 
         {resource && 
-        <div>
+        <div className="timeline-container">
         <FileUpload addResource={setAddResource}/>
         <YouTubeForm/>
         </div>

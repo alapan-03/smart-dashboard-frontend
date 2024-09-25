@@ -11,7 +11,7 @@ export default function Body(second) {
   let loading = useContext(context2);
   console.log(student);
 
-  const colors = ["#009788", "#FF8B66", "#3367D5", "#36474F", "#357FEE", "#566E7A"];
+  const colors = ["#009788", "rgb(227, 148, 0)", "#3367D5", "#36474F", "#357FEE", "#566E7A"];
 
   return (
     <>

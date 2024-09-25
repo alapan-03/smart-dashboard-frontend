@@ -12,9 +12,13 @@ import {
   FaPlus,
   FaTimes,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Resource(props) {
   // const {classId} = useParams();
+
+  const navigate = useNavigate();
 
   const [resource, setResource] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,51 +84,50 @@ export default function Resource(props) {
     }
   };
 
+  const handleFileClick = (fileUrl) => {
+    const encodedUrl = encodeURIComponent(fileUrl);  // Encode URL to handle special characters
+    navigate(`/viewPdf/${encodedUrl}`);
+  };
+
   return (
     <>
       <div className="resource-cont">
-        <div className="resource">
-            {resource.length>0 ? (
+  {resource.length > 0 ? (
+    <ul>
+      {resource.map((data, i) => (
+        <li key={i} className="resource-item">
           <ul>
-            {resource?.map((data, i) => (
-              <li key={i} className="resource-item">
-                <ul>
-                  {data.name?.map((fileName, j) => (
-                    <li key={j} className="file-item">
-                      {/* Display icon based on the file extension */}
-                      <span className="file-icon">{getFileIcon(fileName)}</span>
+            {data.name.map((fileName, j) => (
+              <li key={j} className="file-item">
+                {/* Display icon based on the file extension */}
+                <span className="file-icon">{getFileIcon(fileName)}</span>
 
-                      {/* Display resource name */}
-                      <span className="resource-name">
-                        {fileName.split(" ").length > 1
-                          ? fileName.split(" ")[0] +
-                            "." +
-                            fileName?.split(".")[1]
-                          : fileName?.split(" ")}
-                      </span>
+                {/* Display resource name */}
+                <span className="resource-name" onClick={() => handleFileClick(data.fileUrl[j])}>
+                  {fileName.includes(".")
+                    ? fileName.split(" ")[0] + "." + fileName.split(".").pop()
+                    : fileName}
+                </span>
 
-                      {/* Delete icon */}
-                      <span
-                        className="delete-icon"
-                        onClick={() => handleDelete(data._id, fileName?.replace(/\s/g, ''))}
-                      >
-                        <FaTimes size={20} color="red" />
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                {/* Delete icon */}
+                <span
+                  className="delete-icon"
+                  onClick={() => handleDelete(data._id, fileName.replace(/\s/g, ""))}
+                >
+                  <FaTimes size={20} color="red" />
+                </span>
               </li>
             ))}
           </ul>
-            ):(
-                <div className="nothing-resource">
-                    Nothing to show
-                    </div>
-            )
-        }
-        </div>
-        <button onClick={() => props.addResource(true)}>Add resource</button>
-      </div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <div className="nothing-resource">Nothing to show</div>
+  )}
+  <button onClick={() => props.addResource(true)}>Add resource</button>
+</div>
+
     </>
   );
 }

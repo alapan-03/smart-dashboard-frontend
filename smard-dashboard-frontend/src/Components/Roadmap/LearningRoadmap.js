@@ -26,15 +26,18 @@ export default function LearningRoadmap(props) {
           const data = await response.json();
           console.log("dfklgm",data);
           setTopics(data.topic); // Assuming the classes are returned in the user data
+          props.addTopicProp(false)
         } catch (error) {
           console.error("Error fetching data:", error);
         } finally {
           setLoading(false);
+          // window.location.reload()
         }
       };
   
       fetchData();
-    }, [topics.length]);
+
+    }, []);
     
     return (
         <>

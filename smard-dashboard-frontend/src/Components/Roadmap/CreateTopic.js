@@ -16,7 +16,8 @@ export default function CreateTopic(props) {
   
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+        props.addTopicProp(false);
+
         const classData = {
           topicName,
           classroomId: classId,
@@ -38,7 +39,6 @@ export default function CreateTopic(props) {
     
           const data = await response.json();
           console.log("Class created:", data);
-          props.addTopicProp(false);
           // Optionally, you can clear the form after submission
           setTopicName("");
           setDescription("");

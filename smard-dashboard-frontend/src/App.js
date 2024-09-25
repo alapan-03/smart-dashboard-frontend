@@ -64,7 +64,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/class/:classId" element={<Appan2 />} />
-        {/* <Route path="/contact" element={<Contact />} /> */}
+        <Route path="/viewPdf/:fileUrl" element={<TrackInteractionsCont />} />
       </Routes>
       {/* <Main/> */}
     </Router>
