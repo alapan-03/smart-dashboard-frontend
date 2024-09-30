@@ -67,7 +67,12 @@ function App() {
         <Route path="/viewPdf/:fileUrl" element={<TrackInteractionsCont />} />
       </Routes>
       {/* <Main/> */}
+      
+      <p className="text-3xl font-bold underline">
+      Hello world!
+    </p>
     </Router>
+    
   );
 }
 

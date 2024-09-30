@@ -1,23 +1,51 @@
 import React, { useState } from 'react';
+import url from "./../../url"
 
-const YouTubeForm = () => {
-    const [youtubeLink, setYoutubeLink] = useState('');
+const YouTubeForm = (props) => {
+    const [youtubeLink, setYoutubeLink] = useState(null);
     const [iframeSrc, setIframeSrc] = useState('');
     const [error, setError] = useState('');
 
     // Function to handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+        console.log(youtubeLink)
         e.preventDefault();
         setError(''); // Reset error message
         const videoId = extractVideoId(youtubeLink);
         if (videoId) {
             const src = `https://www.youtube.com/embed/${videoId}`;
             setIframeSrc(src); // Set the src for the iframe
-        } else {
-            setError('Invalid YouTube link');
-            setIframeSrc(''); // Clear previous iframe src
-        }
-    };
+
+            if(youtubeLink && youtubeLink.length>0){
+            
+                try {
+                    const response = await fetch(`${url.url}/api/v1/resource/uploadLink`, {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',  // Add content-type header
+                      },
+                      body: JSON.stringify({
+                        videoUrl: youtubeLink,
+                        topicId: props.topicId,
+                      }),
+                    });
+                  
+                    // Check response status
+                    if (response.ok) {
+                      const data = await response.json();  // Parse JSON response only if request was successful
+                      alert('Files uploaded successfully!');
+                    } else {
+                      // Handle non-200 responses
+                      const errorText = await response.text();  // Read error message as text
+                      console.error('Upload failed:', errorText);
+                    }
+                  } catch (err) {
+                    console.error('Error occurred while uploading:', err.message);
+                  }
+                  
+    }
+}
+    }
 
     // Function to extract video ID from YouTube URL
     const extractVideoId = (url) => {
@@ -27,7 +55,8 @@ const YouTubeForm = () => {
     };
 
     return (
-        <div>
+        <div className='yt-form'>
+            <div className='yt-form-inner'>
             <h2>Enter YouTube Link</h2>
             <form onSubmit={handleSubmit}>
                 <input
@@ -55,6 +84,7 @@ const YouTubeForm = () => {
                     ></iframe>
                 </div>
             )}
+            </div>
         </div>
     );
 };

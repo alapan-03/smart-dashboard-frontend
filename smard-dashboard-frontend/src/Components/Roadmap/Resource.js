@@ -89,11 +89,23 @@ export default function Resource(props) {
     navigate(`/viewPdf/${encodedUrl}`);
   };
 
+
+  const getYoutubeThumbnail = (youtubeUrl) => {
+    // Extract video ID from the URL
+    const videoId = youtubeUrl.split("v=")[1]?.split("&")[0] || youtubeUrl.split("/").pop();
+  
+    // Construct thumbnail URL
+    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  
+    return thumbnailUrl;
+  };
+
   return (
     <>
       <div className="resource-cont">
   {resource.length > 0 ? (
     <ul>
+      <p>Files</p>
       {resource.map((data, i) => (
         <li key={i} className="resource-item">
           <ul>
@@ -121,11 +133,42 @@ export default function Resource(props) {
           </ul>
         </li>
       ))}
+
+      {resource[0].videoUrl.length>0 && <p>Video Links</p>}
+      {resource.map((data, i) => (
+        <li key={i} className="resource-item resource-item-video">
+          <ul>
+            {data.videoUrl.map((link, j) => (
+              <li key={j} className="file-item">
+                <div className="video-list">
+                {/* Display icon based on the file extension */}
+                <span className="file-icon"><img className="thumbnail-resource" src={getYoutubeThumbnail(link)}/></span>
+
+                    <span className="resource-name" onClick={() => props.setVideoUrl(link)}>
+                    {link}
+                </span>
+                </div>
+
+                {/* Delete icon */}
+                <span
+                  className="delete-icon"
+                  onClick={() => handleDelete(data._id, link.replace(/\s/g, ""))}
+                  >
+                  <FaTimes size={20} color="red" />
+                  </span>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
     </ul>
   ) : (
     <div className="nothing-resource">Nothing to show</div>
   )}
-  <button onClick={() => props.addResource(true)}>Add resource</button>
+  <div className="resource-btn">
+    <button onClick={() => props.addResource(true)}>Add files</button>
+    <button onClick={() => props.addLink(true)}>Add links</button>
+  </div>
 </div>
 
     </>

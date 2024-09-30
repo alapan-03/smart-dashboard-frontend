@@ -13,6 +13,7 @@ import url from "./../../url"
 import {
   useParams,
 } from "react-router-dom";
+import YouTubeForm from "./YoutubeForm";
 
 const acceptedFileTypes = [
   "application/pdf",
@@ -147,6 +148,10 @@ const FileUpload = (props) => {
   return (
     <div className="file-upload-container">
     {/* <div className="create-class"> */}
+    <div>
+      <p>Files</p>
+      <p>Link</p>
+      </div>
       {!files || files.length < 1 ? (
       // {/* <div className="file-upload-container-inner"> */}
         <div
@@ -208,6 +213,7 @@ const FileUpload = (props) => {
               </div>
             ))}
           </div>
+
 
           <div>
           <button className="close-resource" onClick={()=>props.addResource(false)}>Close</button>

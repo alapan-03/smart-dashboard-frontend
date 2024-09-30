@@ -102,8 +102,18 @@ const TrackInteractions = (props) => {
     }
   };
 
+
+  const isImageFile = (url) => {
+    const imageExtensions = ["jpg", "jpeg", "png", "gif"];
+    const extension = url.split(".").pop().toLowerCase();
+    return imageExtensions.includes(extension);
+  };
+
   useEffect(() => {
     const loadPdf = async () => {
+      console.log(props.fileUrl)
+
+      if (isImageFile(props.fileUrl)) return;
       console.log(scale)
       try {
         console.log("Loading PDF...");
@@ -162,6 +172,14 @@ const TrackInteractions = (props) => {
         border: "1px solid #ccc",
       }}
     >
+
+{isImageFile(props.fileUrl) && (
+        <img
+          src={props.fileUrl}
+          alt="Document"
+          style={{ width: "100%", height: "auto" }}
+        />
+      ) }
       <div style={{ marginBottom: "10px" }}>
         <button onClick={handleZoomIn}>Zoom In</button>
         <button onClick={handleZoomOut}>Zoom Out</button>
