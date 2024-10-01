@@ -18,7 +18,7 @@ export default function CreateClass(props) {
         };
     
         try {
-          const response = await fetch(`${url.url}/createClassroom`, {
+          const response = await fetch(`${url}/createClassroom`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

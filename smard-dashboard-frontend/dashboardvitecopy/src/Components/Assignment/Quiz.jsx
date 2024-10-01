@@ -6,8 +6,10 @@ import url from "./../../url.jsx"
 import { useParams } from 'react-router';
 // import {topicId} from "./../Roadmap/Appan2.jsx"
 
+import { useNavigate } from 'react-router-dom';
 
-function Quiz() {
+
+function Quiz(topicId) {
   const [questions, setQuestions] = useState([]);
   const [assignment, setAssignment] = useState(null); // Store the assignment data separately
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -19,9 +21,10 @@ function Quiz() {
   const [answers, setAnswers] = useState([]);
   const [alreadySubmitted, setAlreadySubmitted] = useState(false);
 
+  const navigate = useNavigate();
 
   // console.log(topicId)
-  const studentId = '66e5d3880b22ee87ceb264d6'; // Dummy student ID
+  const studentId = '66faaee54a64611470e14ff3'; // Dummy student ID
 
   const { assignId } = useParams();
 
@@ -30,7 +33,7 @@ function Quiz() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get(`${url}/student/assignmentDetails/${assignId}`);
+        const response = await axios.get(`${url}/education/getAssignment/${assignId}`);
         console.log(response.data);
         // if (response.ok) {
           setAssignment(response.data); // Store assignment data separately
@@ -95,6 +98,7 @@ function Quiz() {
         correctAnswers: score,
         startTime
       });
+      navigate(`/${assignId}/leaderboard`);
     } catch (error) {
       if (error.response && error.response.status === 409) {
         setAlreadySubmitted(true);
@@ -134,7 +138,7 @@ function Quiz() {
               Retake Quiz
             </button>
           </div>
-          <Leaderboard assignmentId={assignment._id} />
+          {/* <Leaderboard assignmentId={assignment._id} /> */}
         </>
       ) : (
         <div className="bg-gray-700 p-8 rounded-lg shadow-lg w-full max-w-lg flex flex-col items-center">
@@ -166,8 +170,6 @@ function Quiz() {
       {alreadySubmitted ? <p>Assignment already submitted</p> : null}
       {!showResult ? <p className="text-gray-200 text-lg mt-5">Questions Attempted: {attemptedQuestions} / {questions.length}</p> : null}
 
-
-      <Leaderboard/>
     </div>
   );
 }

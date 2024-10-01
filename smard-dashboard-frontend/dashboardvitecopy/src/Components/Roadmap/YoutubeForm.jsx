@@ -19,7 +19,7 @@ const YouTubeForm = (props) => {
             if(youtubeLink && youtubeLink.length>0){
             
                 try {
-                    const response = await fetch(`${url.url}/api/v1/resource/uploadLink`, {
+                    const response = await fetch(`${url}/api/v1/resource/uploadLink`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',  // Add content-type header

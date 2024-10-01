@@ -8,6 +8,7 @@ import Main from './Components/HomePage/Main.jsx';
 import Appan2 from './Components/Roadmap/Appan2.jsx';
 import TrackInteractionsCont from './Components/PdfViewer/TrackInteractionsCont.jsx';
 import Quiz from './Components/Assignment/Quiz.jsx';
+import Leaderboard from './Components/Assignment/Leaderboard.jsx';
 
 
 const context = createContext();
@@ -64,6 +65,7 @@ function App() {
         <Route path="/class/:classId" element={<Appan2 topicId={setTopicFunc}/>} />
         <Route path="/viewPdf/:fileUrl" element={<TrackInteractionsCont />} />
         <Route path="/assignment/:assignId" element={<Quiz topicId={topicId}/>} />
+        <Route path="/:assignId/leaderboard" element={<Leaderboard/>} />
       </Routes>
       
       {/* <p className="text-3xl font-bold underline">

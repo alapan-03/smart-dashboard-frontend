@@ -25,6 +25,9 @@ export default function Resource(props) {
   const [assignment, setAssignment] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addClassState, setAddClassState] = useState(false);
+
+  const [videoResources, setVideoResources] = useState([]);
+
   console.log(props.topic);
 
   useEffect(() => {
@@ -70,6 +73,22 @@ export default function Resource(props) {
     fetchData();
     fetchAssignment();
   }, [props.topic, resource[0]?.name?.length]);
+
+  const [resources, setResources] = useState([]);
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const response = await axios.get(`${url}/api/v1/resource/getVideoResource`); // Adjust your backend URL
+        console.log(response.data);
+        setVideoResources(response.data);
+      } catch (error) {
+        console.error('Error fetching resources:', error);
+      }
+    };
+
+    fetchResources();
+  }, []);
 
   const getFileIcon = (filename) => {
     const extension = filename?.split(".").pop().toLowerCase();
@@ -128,7 +147,7 @@ export default function Resource(props) {
       <div className="resource-cont">
   {resource.length > 0 ? (
     <ul>
-      <p>Files</p>
+      <p className="font-bold text-lg">Files</p>
       {resource.map((data, i) => (
         <li key={i} className="resource-item">
           <ul>
@@ -157,33 +176,40 @@ export default function Resource(props) {
         </li>
       ))}
 
-      {resource[0].videoUrl.length>0 && <p>Video Links</p>}
-      {resource.map((data, i) => (
-        <li key={i} className="resource-item resource-item-video">
-          <ul>
-            {data.videoUrl.map((link, j) => (
-              <li key={j} className="file-item">
-                <div className="video-list">
-                {/* Display icon based on the file extension */}
-                <span className="file-icon"><img className="thumbnail-resource" src={getYoutubeThumbnail(link)}/></span>
+      <div>
+      {videoResources.videos.length > 0 && <p className="font-bold text-lg">Video Links</p>}
+      {console.log(videoResources)}
+      <ul>
+        {videoResources.videos.map((data) => (
+          <li key={data._id} className="resource-item resource-item-video">
+            <ul>
+              {/* Check if videoUrl exists and render accordingly */}
+              {data.videoUrl && (
+                <li className="file-item">
+                  <div className="video-list">
+                    {/* Display icon based on the file extension */}
+                    <span className="file-icon">
+                      <img className="thumbnail-resource" src={getYoutubeThumbnail(data.videoUrl)} alt={`Thumbnail for ${data.name}`} />
+                    </span>
+                    <span className="resource-name" onClick={() => props.setVideoUrl(data.videoUrl)}>
+                      {data.videoUrl}
+                    </span>
+                  </div>
 
-                    <span className="resource-name" onClick={() => props.setVideoUrl(link)}>
-                    {link}
-                </span>
-                </div>
-
-                {/* Delete icon */}
-                <span
-                  className="delete-icon"
-                  onClick={() => handleDelete(data._id, link.replace(/\s/g, ""))}
+                  {/* Delete icon */}
+                  <span
+                    className="delete-icon"
+                    onClick={() => handleDelete(data._id, data.videoUrl.replace(/\s/g, ""))}
                   >
-                  <FaTimes size={20} color="red" />
+                    <FaTimes size={20} color="red" />
                   </span>
-              </li>
-            ))}
-          </ul>
-        </li>
-      ))}
+                </li>
+              )}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </div>
 
 
 {assignment && <p>Assignments</p>}
