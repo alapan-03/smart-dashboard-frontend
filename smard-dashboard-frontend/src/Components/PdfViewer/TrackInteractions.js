@@ -5,13 +5,15 @@ import axios from "axios";
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js";
 
-const TrackInteractions = () => {
+const TrackInteractions = (props) => {
   const [numPages, setNumPages] = useState(0);
   const [pageCanvases, setPageCanvases] = useState([]);
 
   const [startTime, setStartTime] = useState(null);
   const [timeSpent, setTimeSpent] = useState(0);
   const [inactivityTimer, setInactivityTimer] = useState(null);
+
+  const [scale, setScale] = useState(0.5);
 
   const viewerRef = useRef(null);
 
@@ -46,7 +48,7 @@ const TrackInteractions = () => {
         console.log(roundedTimeInMinutes);
         setTimeSpent((prev) => prev + roundedTimeInMinutes);
         sendTimeSpentToBackend(roundedTimeInMinutes);
-        window.location.reload();
+        // window.location.reload();
       }
     };
 
@@ -81,34 +83,48 @@ const TrackInteractions = () => {
         "http://127.0.0.1:8080/api/v1/resource/updateTimeSpent",
         {
           resourceId: "66e1e6defba116cdc7733f50",
-          userId: "66e1a7465008b29b6c152401",
+          userId: "66e4685083b9637556d6b1ba",
           timeInMinutes: timeInMinutes,
-        })
-      const respons2 = await axios.post(
-        "http://127.0.0.1:8080/api/v1/resource/updateResourceTime",
+        }
+      );
+      const response2 = await axios.post(
+        "http://127.0.0.1:8080/api/v1/student/updateResourceTime",
         {
           // resourceId: "66e1e6defba116cdc7733f50",
-          userId: "66e1a7465008b29b6c152401",
+          userId: "66e4685083b9637556d6b1ba",
           timeInMinutes: timeInMinutes,
         }
       );
       console.log("Time sent to backend:", response.data);
+      console.log("Time sent to backend2:", response2.data);
     } catch (error) {
       console.error("Error sending time to backend:", error);
     }
   };
 
+
+  const isImageFile = (url) => {
+    const imageExtensions = ["jpg", "jpeg", "png", "gif"];
+    const extension = url.split(".").pop().toLowerCase();
+    return imageExtensions.includes(extension);
+  };
+
   useEffect(() => {
     const loadPdf = async () => {
+      console.log(props.fileUrl)
+
+      if (isImageFile(props.fileUrl)) return;
+      console.log(scale)
       try {
         console.log("Loading PDF...");
         const pdfUrl =
-          "https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf";
+          // "https://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf";
+          props.fileUrl;
         const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
         console.log("PDF loaded");
         setNumPages(pdf.numPages);
 
-        const scale = 1.5; // Adjust scale to control the size
+// Adjust scale to control the size
         const canvasList = [];
 
         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -137,7 +153,15 @@ const TrackInteractions = () => {
     };
 
     loadPdf();
-  }, []);
+  }, [scale]);
+
+  const handleZoomIn = () => {
+    setScale((prevScale) => prevScale + 0.5); // Increase scale by 0.1
+  };
+
+  const handleZoomOut = () => {
+    setScale((prevScale) => (prevScale > 0.2 ? prevScale - 0.1 : prevScale)); // Decrease scale, but don't go below 0.2
+  };
 
   return (
     <div
@@ -148,9 +172,31 @@ const TrackInteractions = () => {
         border: "1px solid #ccc",
       }}
     >
+
+{isImageFile(props.fileUrl) && (
+        <img
+          src={props.fileUrl}
+          alt="Document"
+          style={{ width: "100%", height: "auto" }}
+        />
+      ) }
+      <div style={{ marginBottom: "10px" }}>
+        <button onClick={handleZoomIn}>Zoom In</button>
+        <button onClick={handleZoomOut}>Zoom Out</button>
+      </div>
+
       {pageCanvases.map((canvas, index) => (
         <div key={index} style={{ marginBottom: "20px", textAlign: "center" }}>
           <canvas ref={(el) => el?.replaceWith(canvas)}></canvas>
+          {/* <canvas
+            ref={(el) => {
+              if (el) {
+                el.style.width = `${canvas.width}px`;
+                el.style.height = `${canvas.height}px`;
+                el.replaceWith(canvas);
+              }
+            }}
+          ></canvas> */}
         </div>
       ))}
     </div>
