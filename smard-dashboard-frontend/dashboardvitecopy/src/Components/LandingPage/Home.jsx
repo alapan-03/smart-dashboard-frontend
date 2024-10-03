@@ -7,7 +7,7 @@ import Footer from './Footer';
 import ContactUs from './ContactUs';
 import { useLocation } from 'react-router-dom';
 
-import store from '../../Redux/store';
+import {store} from '../../Redux/store';
 
 const Home = () => {
     const heroRef = useRef(null);
