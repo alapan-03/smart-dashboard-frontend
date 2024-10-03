@@ -1,8 +1,24 @@
 import { BookAudio, LayoutPanelLeft, LogOut, Play, ReceiptIndianRupee, User } from "lucide-react"
 import logo from "./Images/logo.jpg"
 import "./homepage.css"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../../Redux/Slices/authSlice";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"
+
 
 export default function Sidebar(props) {
+    const {user} = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate()
+
+    const handleLogout = () => {
+        console.log("Handle Logout Func")
+        dispatch(logout());
+        Cookies.remove('authToken');
+        navigate("/")
+    }
     return(
         <>
         <div className="ttv-sidebar">
@@ -11,10 +27,10 @@ export default function Sidebar(props) {
             <div className="ttv-sidebar-body">
                 <div className="ttv-sidebar-logout-cont">
                     <User strokeWidth={1.75} className="ttv-sidebar-pfp-icon" size={19} color="#333333"/>
-                    <p className="ttv-sidebar-pfp-name">Jessica James</p>
+                    <p className="ttv-sidebar-pfp-name">{user}</p>
                 </div>
 
-                <div className="ttv-sidebar-logout">
+                <div className="ttv-sidebar-logout" onClick={handleLogout}>
                     <LogOut strokeWidth={1.75} className="ttv-sidebar-logout-icon" size={19} color="#333333"/>
                     <p className="ttv-sidebar-logout-p">Logout</p>
                 </div>

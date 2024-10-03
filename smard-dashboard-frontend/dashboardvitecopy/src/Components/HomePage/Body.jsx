@@ -23,7 +23,7 @@ export default function Body(second) {
         ) : (
           student?.classrooms?.slice() // create a shallow copy of the array to avoid mutating the original
           .reverse() .map((data, i) => (
-            <div className="body-card-cont">
+            <div className="body-card-cont" key={i}>
               <div
                 className="body-card-color"
                 style={{ backgroundColor: colors[i % colors.length] }}
